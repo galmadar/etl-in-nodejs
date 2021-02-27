@@ -1,4 +1,5 @@
 import logger from "../logger/logger";
+import CsvParser from "./csvParser";
 
 export const parseKeys = {
     patient: 'Patient',
@@ -8,6 +9,7 @@ export const parseKeys = {
 export default class ParsersManager {
     hospitalsParsers = {}
     r = new RegExp('hospital_(.*)_(.*).csv')
+    csvParser = new CsvParser()
 
     registerParser = (hospitalId, hospitalParser) => {
         this.hospitalsParsers[hospitalId] = hospitalParser;
@@ -27,5 +29,9 @@ export default class ParsersManager {
         }
 
         return null;
+    }
+
+    parseCSV(file) {
+        return this.csvParser.parse(file)
     }
 }

@@ -1,24 +1,17 @@
 # ETL system in node.js
 
 ## Flow
-### "Watch" files
-- Files goes into the files folder OR http request is sent to the server
-- event/function is published to the next step (read the file)
-### Parsing the files
-- "General" reader, reads the new csv
-- Pass it to the relevant reader (? - we might not need this step because we "always" save specific data)
-- **Parse corrupted files**
-### Save A LOT OF DATA in the DB
-- **Should be scalable**
-- **Data deduplication**
+1. "Watch" files
+   1. FileWatcher recognize a new file inside the target folder.
+   2. The ParserManager "choose" the right parser according to the file name.
+   3. "FileChanged" event is invoked in case there is a parser for the file.
+2. Parsing the files
+   1. "General" CSV parser, parse the file and extract all the rows from the file in the form of key-value paires. 
+   2. The relevant parser, convert the rows into Patient/Treatment objects.
+3. Save the data in the DB
 
 ## Components
-- Watchfile - get updates about new files
-- Queue - to store events from the watcher
-- Handler for file - a simple function to handle parsing the file
-- Logger mechanism (?) - for monitoring corrupted files
-- Models for the DB - create OR UPDATE data about the models
-
-## DB
-#### NoSQL db - in order to be able saving different "schemas" of collection
-- Demands - fast DB to create AND UPDATE millions of rows
+- FileWatcher - get updates about new files in the "csvs" folder
+- ParserManager - a singleton class that contain the hospitals parsers
+- MongoConnection and (Patient / Treatment) Models
+- Logger - logs messages in a file and in the console
