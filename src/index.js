@@ -8,5 +8,5 @@ const handleNewFile = (howManyHandlersToRun) => {
     }
 }
 
-handleNewFile(6)
+handleNewFile(4)
 watchFiles()
