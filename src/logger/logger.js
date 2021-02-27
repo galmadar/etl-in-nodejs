@@ -4,17 +4,7 @@ const logTransports = [
     new transports.File({
         level: 'debug',
         filename: './.logs/trace.log',
-        format: format.json({
-            replacer: (key, value) => {
-                if (key === 'error') {
-                    return {
-                        message: value.message,
-                        stack: value.stack
-                    };
-                }
-                return value;
-            },
-        })
+        format: format.prettyPrint()
     }),
     new transports.Console({
         level: 'debug',
