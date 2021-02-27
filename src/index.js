@@ -10,20 +10,21 @@ import Treatment from "./DB/models/Treatment";
 import Patient from "./DB/models/Patient";
 import Hospital2Parser from "./parser/hospitalParsers/hospital2Parser";
 
-/* Init connection to mongo */
+/* Init connection to mongo and FileWatcher */
 const mongoConnection = new MongoConnection('mongodb://localhost:27017/etl');
+const fileWatcher = new FileWatcher()
 
 mongoConnection
     .connect(() => {
         logger.debug('connected to DB')
     })
     .then(() => {
-        const fileWatcher = new FileWatcher()
-        fileWatcher.watch('/Users/galmadar/myProjects/etl-in-nodejs/csvs', fileChanged)
+        let dirPath = `${__dirname}/csvs`;
+        logger.debug(`watching on: ${dirPath}`)
+        fileWatcher.watch(dirPath, fileChanged)
     })
 
 /* Init ParserManager */
-
 const parserManager = new ParsersManager()
 parserManager.registerParser(Hospital1Parser.hospitalId, new Hospital1Parser())
 parserManager.registerParser(Hospital2Parser.hospitalId, new Hospital2Parser())
