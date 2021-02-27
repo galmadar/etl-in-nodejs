@@ -9,6 +9,7 @@ const schema = new Schema({
     lastName: {type: String},
     mrn: {type: String},
     patientDOB: {type: Date},
+    deathDate: {type: Date},
     isDeceased: {type: String},
     gender: {type: String},
     sex: {type: String},

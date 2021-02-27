@@ -8,6 +8,7 @@ import ParsersManager, {parseKeys} from "./parser/parsersManager";
 import Hospital1Parser from "./parser/hospitalParsers/hospital1Parser";
 import Treatment from "./DB/models/Treatment";
 import Patient from "./DB/models/Patient";
+import Hospital2Parser from "./parser/hospitalParsers/hospital2Parser";
 
 /* Init variables */
 const mongoConnection = new MongoConnection('mongodb://localhost:27017/etl');
@@ -20,7 +21,7 @@ mongoConnection
     })
 // .then(() => {
 //     /* Watch over directory of the .csv files */
-//     fileWatcher.watch('/Users/galmadar/myProjects/etl-in-nodejs/.csvs', (...args) => {
+//     fileWatcher.watch('/Users/galmadar/myProjects/etl-in-nodejs/csvs', (...args) => {
 //         logger.info(`file changed with args: ${args}`)
 //     })
 // })
@@ -48,10 +49,11 @@ mongoConnection
 
 const parserManager = new ParsersManager()
 parserManager.registerParser(Hospital1Parser.hospitalId, new Hospital1Parser())
+parserManager.registerParser(Hospital2Parser.hospitalId, new Hospital2Parser())
 
 const csvParser = new CsvParser()
 // csvParser
-//     .parse('/Users/galmadar/myProjects/etl-in-nodejs/.csvs/hospital_1_Treatment.csv')
+//     .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_1_Treatment.csv')
 //     .then(results => {
 //         logger.info('results from files are::')
 //         logger.info(results)
@@ -73,17 +75,89 @@ const csvParser = new CsvParser()
 //             }
 //         }
 //     })
+// csvParser
+//     .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_1_Patient.csv')
+//     .catch(err => {
+//         logger.error(`error in parse file`)
+//         logger.error(err)
+//     })
+//     .then(results => {
+//         logger.info('results from files are:')
+//         logger.info(results)
+//         for (let i = 0; i < results.length; i++) {
+//             let currentRow = results[i];
+//             logger.info(`currentRow: ${JSON.stringify(currentRow)}`)
+//             const parsedResult = parserManager.parse(Hospital1Parser.hospitalId, parseKeys.patient, currentRow)
+//             if (parsedResult != null) {
+//                 const newPatient = new Patient(parsedResult)
+//
+//                 logger.info(`newPatient: ${newPatient}`)
+//                 newPatient.save()
+//                     .then((saved) => {
+//                         logger.debug('treatment saved')
+//                     })
+//                     .catch(err => {
+//                         logger.error('error in saving treatment')
+//                         logger.error(err.message)
+//                     })
+//             }
+//         }
+//     })
+//     .catch(err => {
+//         logger.error('error in parse csv')
+//         logger.error(err.message)
+// //     })
+// csvParser
+//     .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_2_Patient.csv')
+//     .catch(err => {
+//         logger.error(`error in parse file`)
+//         logger.error(err)
+//     })
+//     .then(x => {
+//         return new Promise(res => {
+//             setTimeout(() => {
+//                 res(x)
+//             }, 2000)
+//         })
+//     })
+//     .then(results => {
+//         logger.info('results from files are:')
+//         logger.info(results)
+//         for (let i = 0; i < results.length; i++) {
+//             let currentRow = results[i];
+//             logger.info(`currentRow: ${JSON.stringify(currentRow)}`)
+//             const parsedResult = parserManager.parse(Hospital2Parser.hospitalId, parseKeys.patient, currentRow)
+//             if (parsedResult != null) {
+//                 const newPatient = new Patient(parsedResult)
+//
+//                 logger.info(`newPatient: ${newPatient}`)
+//                 newPatient.save()
+//                     .then((saved) => {
+//                         logger.debug('patient saved')
+//                     })
+//                     .catch(err => {
+//                         logger.error('error in saving patient')
+//                         logger.error(err.message)
+//                     })
+//             }
+//         }
+//     })
+//     .catch(err => {
+//         logger.error('error in parse csv')
+//         logger.error(err.message)
+//     })
+
 csvParser
-    .parse('/Users/galmadar/myProjects/etl-in-nodejs/.csvs/hospital_1_Patient.csv')
+    .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_2_Treatment.csv')
     .catch(err => {
         logger.error(`error in parse file`)
         logger.error(err)
     })
-    .then((r) => {
+    .then(r => {
         return new Promise(res => {
             setTimeout(() => {
                 res(r)
-            }, 4500)
+            }, 5000)
         })
     })
     .then(results => {
@@ -92,12 +166,12 @@ csvParser
         for (let i = 0; i < results.length; i++) {
             let currentRow = results[i];
             logger.info(`currentRow: ${JSON.stringify(currentRow)}`)
-            const parsedResult = parserManager.parse(Hospital1Parser.hospitalId, parseKeys.patient, currentRow)
+            const parsedResult = parserManager.parse(Hospital2Parser.hospitalId, parseKeys.treatment, currentRow)
             if (parsedResult != null) {
-                const newPatient = new Patient(parsedResult)
+                const newTreatment = new Treatment(parsedResult)
 
-                logger.info(`newPatient: ${newPatient}`)
-                newPatient.save()
+                logger.info(`newTreatment: ${newTreatment}`)
+                newTreatment.save()
                     .then((saved) => {
                         logger.debug('treatment saved')
                     })
