@@ -10,180 +10,67 @@ import Treatment from "./DB/models/Treatment";
 import Patient from "./DB/models/Patient";
 import Hospital2Parser from "./parser/hospitalParsers/hospital2Parser";
 
-/* Init variables */
+/* Init connection to mongo */
 const mongoConnection = new MongoConnection('mongodb://localhost:27017/etl');
-const fileWatcher = new FileWatcher()
-
 
 mongoConnection
     .connect(() => {
-        logger.debug("Connected to mongo");
+        logger.debug('connected to DB')
     })
-// .then(() => {
-//     /* Watch over directory of the .csv files */
-//     fileWatcher.watch('/Users/galmadar/myProjects/etl-in-nodejs/csvs', (...args) => {
-//         logger.info(`file changed with args: ${args}`)
-//     })
-// })
+    .then(() => {
+        const fileWatcher = new FileWatcher()
+        fileWatcher.watch('/Users/galmadar/myProjects/etl-in-nodejs/csvs', fileChanged)
+    })
 
-
-// const fc = new FileChanged({name: "two"})
-// fc.save()
-//     .then(saved => {
-//         if (saved)
-//             return saved
-//     })
-//     .then(r => {
-//         return new Promise(res => {
-//             setTimeout(() => {
-//                 res(r)
-//             }, 5000)
-//         })
-//     })
-//     .then(saveddd => {
-//
-//         saveddd.name = "papa"
-//         return saveddd.save()
-//     })
-
+/* Init ParserManager */
 
 const parserManager = new ParsersManager()
 parserManager.registerParser(Hospital1Parser.hospitalId, new Hospital1Parser())
 parserManager.registerParser(Hospital2Parser.hospitalId, new Hospital2Parser())
 
-const csvParser = new CsvParser()
-// csvParser
-//     .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_1_Treatment.csv')
-//     .then(results => {
-//         logger.info('results from files are::')
-//         logger.info(results)
-//         for (let i = 0; i < results.length; i++) {
-//             let currentRow = results[i];
-//             logger.info(`currentRow: ${JSON.stringify(currentRow)}`)
-//             const parsedResult = parserManager.parse(Hospital1Parser.hospitalId, parseKeys.treatment, currentRow)
-//             if (parsedResult != null) {
-//                 const newTreatment = new Treatment(parsedResult)
-//                 logger.info(`newTreatment: ${newTreatment}`)
-//                 newTreatment.save()
-//                     .then((saved) => {
-//                         logger.debug('treatment saved')
-//                     })
-//                     .catch(err => {
-//                         logger.error('error in saving treatment')
-//                         logger.error(err.message)
-//                     })
-//             }
-//         }
-//     })
-// csvParser
-//     .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_1_Patient.csv')
-//     .catch(err => {
-//         logger.error(`error in parse file`)
-//         logger.error(err)
-//     })
-//     .then(results => {
-//         logger.info('results from files are:')
-//         logger.info(results)
-//         for (let i = 0; i < results.length; i++) {
-//             let currentRow = results[i];
-//             logger.info(`currentRow: ${JSON.stringify(currentRow)}`)
-//             const parsedResult = parserManager.parse(Hospital1Parser.hospitalId, parseKeys.patient, currentRow)
-//             if (parsedResult != null) {
-//                 const newPatient = new Patient(parsedResult)
-//
-//                 logger.info(`newPatient: ${newPatient}`)
-//                 newPatient.save()
-//                     .then((saved) => {
-//                         logger.debug('treatment saved')
-//                     })
-//                     .catch(err => {
-//                         logger.error('error in saving treatment')
-//                         logger.error(err.message)
-//                     })
-//             }
-//         }
-//     })
-//     .catch(err => {
-//         logger.error('error in parse csv')
-//         logger.error(err.message)
-// //     })
-// csvParser
-//     .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_2_Patient.csv')
-//     .catch(err => {
-//         logger.error(`error in parse file`)
-//         logger.error(err)
-//     })
-//     .then(x => {
-//         return new Promise(res => {
-//             setTimeout(() => {
-//                 res(x)
-//             }, 2000)
-//         })
-//     })
-//     .then(results => {
-//         logger.info('results from files are:')
-//         logger.info(results)
-//         for (let i = 0; i < results.length; i++) {
-//             let currentRow = results[i];
-//             logger.info(`currentRow: ${JSON.stringify(currentRow)}`)
-//             const parsedResult = parserManager.parse(Hospital2Parser.hospitalId, parseKeys.patient, currentRow)
-//             if (parsedResult != null) {
-//                 const newPatient = new Patient(parsedResult)
-//
-//                 logger.info(`newPatient: ${newPatient}`)
-//                 newPatient.save()
-//                     .then((saved) => {
-//                         logger.debug('patient saved')
-//                     })
-//                     .catch(err => {
-//                         logger.error('error in saving patient')
-//                         logger.error(err.message)
-//                     })
-//             }
-//         }
-//     })
-//     .catch(err => {
-//         logger.error('error in parse csv')
-//         logger.error(err.message)
-//     })
-
-csvParser
-    .parse('/Users/galmadar/myProjects/etl-in-nodejs/csvs/hospital_2_Treatment.csv')
-    .catch(err => {
-        logger.error(`error in parse file`)
-        logger.error(err)
-    })
-    .then(r => {
-        return new Promise(res => {
-            setTimeout(() => {
-                res(r)
-            }, 5000)
-        })
-    })
-    .then(results => {
-        logger.info('results from files are:')
-        logger.info(results)
-        for (let i = 0; i < results.length; i++) {
-            let currentRow = results[i];
-            logger.info(`currentRow: ${JSON.stringify(currentRow)}`)
-            const parsedResult = parserManager.parse(Hospital2Parser.hospitalId, parseKeys.treatment, currentRow)
-            if (parsedResult != null) {
-                const newTreatment = new Treatment(parsedResult)
-
-                logger.info(`newTreatment: ${newTreatment}`)
-                newTreatment.save()
-                    .then((saved) => {
-                        logger.debug('treatment saved')
-                    })
-                    .catch(err => {
-                        logger.error('error in saving treatment')
-                        logger.error(err.message)
-                    })
-            }
+const fileChanged = (file) => {
+    logger.debug(`file changed: ${file}`)
+    const fileName = file.substr(file.lastIndexOf('/'))
+    const {hospitalsParser, fileType} = parserManager.getParserAndTypeByFileName(fileName);
+    let parserFunctionByFileName, saveToDbFunction
+    if (hospitalsParser) {
+        switch (fileType) {
+            case parseKeys.patient:
+                parserFunctionByFileName = hospitalsParser.parsePatient
+                saveToDbFunction = (p) => {
+                    new Patient(p)
+                        .save()
+                        .then(() => {
+                            logger.debug('saved patient to DB')
+                        })
+                        .catch(err => {
+                            logger.error('failed to save patient to DB')
+                        })
+                }
+                break;
+            case parseKeys.treatment:
+                parserFunctionByFileName = hospitalsParser.parseTreatment
+                saveToDbFunction = (p) => {
+                    new Treatment(p)
+                        .save()
+                        .then(() => {
+                            logger.debug('saved treatment to DB')
+                        })
+                        .catch(err => {
+                            logger.error('failed to save treatment to DB')
+                        })
+                }
+                break;
         }
-    })
-    .catch(err => {
-        logger.error('error in parse csv')
-        logger.error(err.message)
-    })
-
+    }
+    if (parserFunctionByFileName) {
+        new CsvParser()
+            .parse(file)
+            .then(results => {
+                for (let i = 0; i < results.length; i++) {
+                    let parsedObject = parserFunctionByFileName(results[i]);
+                    saveToDbFunction(parsedObject)
+                }
+            })
+    }
+}

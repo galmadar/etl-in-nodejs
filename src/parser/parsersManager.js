@@ -1,30 +1,29 @@
 import logger from "../logger/logger";
 
 export const parseKeys = {
-    patient: 'patient',
-    treatment: 'treatment'
+    patient: 'Patient',
+    treatment: 'Treatment'
 }
 
 export default class ParsersManager {
     hospitalsParsers = {}
+    r = new RegExp('hospital_(.*)_(.*).csv')
 
     registerParser = (hospitalId, hospitalParser) => {
         this.hospitalsParsers[hospitalId] = hospitalParser;
     }
 
-    parse = (hospitalId, parseKey, csvRow) => {
-        logger.debug(`in parse with '${hospitalId}', '${parseKey}', {${JSON.stringify(csvRow)}}`)
+    getParserAndTypeByFileName = (fileName) => {
+        const regexExecArr = this.r.exec(fileName)
+        if (regexExecArr != null) {
+            const hospitalId = regexExecArr[1];
+            const fileType = regexExecArr[2];
+            let hospitalsParser = this.hospitalsParsers[hospitalId];
 
-        const hospitalParser = this.hospitalsParsers[hospitalId]
-        switch (parseKey) {
-            case parseKeys.patient:
-                logger.debug('patient case')
-                return hospitalParser.parsePatient(csvRow);
-            case parseKeys.treatment:
-                logger.debug('treatment case')
-                return hospitalParser.parseTreatment(csvRow);
-            default:
-                logger.warn('no correct parseKey sent')
+            return {
+                hospitalsParser,
+                fileType
+            }
         }
 
         return null;
