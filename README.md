@@ -15,3 +15,5 @@
 - ParserManager - a singleton class that contain the hospitals parsers
 - MongoConnection and (Patient / Treatment) Models
 - Logger - logs messages in a file and in the console
+
+![Architecture Sketch](docs/draw.png)
