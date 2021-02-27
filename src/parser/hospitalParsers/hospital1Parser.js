@@ -11,19 +11,19 @@ export default class Hospital1Parser {
             return {
                 hospitalId: Hospital1Parser.hospitalId,
                 patientId: patientId,
-                mrn: csvRow.MRN,
-                firstName: csvRow.FirstName,
-                lastName: csvRow.LastName,
+                mrn: this.parseNotNull(csvRow.MRN),
+                firstName: this.parseNotNull(csvRow.FirstName),
+                lastName: this.parseNotNull(csvRow.LastName),
                 patientDOB: this.parseDate(csvRow.PatientDOB),
-                isDeceased: csvRow.IsDeceased,
-                gender: csvRow.Gender,
-                sex: csvRow.Sex,
-                address: csvRow.Address,
-                city: csvRow.City,
-                state: csvRow.State,
-                zipCode: csvRow.ZipCode,
-                lastModifiedDate: csvRow.LastModifiedDate,
-                dod_ts: csvRow.DOD_TS,
+                isDeceased: this.parseNotNull(csvRow.IsDeceased),
+                gender: this.parseNotNull(csvRow.Gender),
+                sex: this.parseNotNull(csvRow.Sex),
+                address: this.parseNotNull(csvRow.Address),
+                city: this.parseNotNull(csvRow.City),
+                state: this.parseNotNull(csvRow.State),
+                zipCode: this.parseNotNull(csvRow.ZipCode),
+                lastModifiedDate: this.parseNotNull(csvRow.LastModifiedDate),
+                dod_ts: this.parseNotNull(csvRow.DOD_TS),
             }
         }
 
@@ -46,6 +46,10 @@ export default class Hospital1Parser {
         return null
     }
 
+    parseNotNull = (val) => {
+        return val && val.toLowerCase() !== 'null' ? val : undefined
+    }
+
     parseTreatment = (csvRow) => {
         const patientId = csvRow.PatientID
         const treatmentId = csvRow.TreatmentID
@@ -59,12 +63,11 @@ export default class Hospital1Parser {
                 treatmentId: treatmentId,
                 startDate: this.parseDate(csvRow.StartDate),
                 endDate: this.parseDate(csvRow.EndDate),
-                displayName: csvRow.DisplayName,
-                diagnoses: csvRow.Diagnoses,
-                numberOfCycles: csvRow.CyclesXDays,
-                status: null,
-                active: csvRow.Active,
-                treatmentLine: csvRow.TreatmentLine,
+                displayName: this.parseNotNull(csvRow.DisplayName),
+                diagnoses: this.parseNotNull(csvRow.Diagnoses),
+                numberOfCycles: this.parseNotNull(csvRow.CyclesXDays),
+                active: this.parseNotNull(csvRow.Active),
+                treatmentLine: this.parseNotNull(csvRow.TreatmentLine),
             }
         }
 

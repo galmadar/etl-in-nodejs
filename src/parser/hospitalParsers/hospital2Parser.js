@@ -11,23 +11,27 @@ export default class Hospital2Parser {
             return {
                 hospitalId: Hospital2Parser.hospitalId,
                 patientId: patientId,
-                mrn: csvRow.MRN,
-                firstName: csvRow.FirstName,
-                lastName: csvRow.LastName,
+                mrn: this.parseNotNull(csvRow.MRN),
+                firstName: this.parseNotNull(csvRow.FirstName),
+                lastName: this.parseNotNull(csvRow.LastName),
                 patientDOB: this.parseDate(csvRow.PatientDOB),
                 deathDate: this.parseDate(csvRow.DeathDate),
-                isDeceased: csvRow.IsPatientDeceased,
-                gender: csvRow.Gender,
-                sex: csvRow.Sex,
-                address: csvRow.AddressLine,
-                city: csvRow.AddressCity,
-                state: csvRow.AddressState,
-                zipCode: csvRow.AddressZipCode,
-                lastModifiedDate: csvRow.LastModifiedDate
+                isDeceased: this.parseDate(csvRow.IsPatientDeceased),
+                gender: this.parseNotNull(csvRow.Gender),
+                sex: this.parseNotNull(csvRow.Sex),
+                address: this.parseNotNull(csvRow.AddressLine),
+                city: this.parseNotNull(csvRow.AddressCity),
+                state: this.parseNotNull(csvRow.AddressState),
+                zipCode: this.parseNotNull(csvRow.AddressZipCode),
+                lastModifiedDate: this.parseNotNull(csvRow.LastModifiedDate)
             }
         }
 
         return null;
+    }
+
+    parseNotNull = (val) => {
+        return val && val.toLowerCase() !== 'null' ? val : undefined
     }
 
     parseDate = (strDate) => {
@@ -63,10 +67,10 @@ export default class Hospital2Parser {
                 treatmentId: treatmentId,
                 startDate: this.parseDate(csvRow.StartDate),
                 endDate: this.parseDate(csvRow.EndDate),
-                displayName: csvRow.DisplayName,
-                diagnoses: (csvRow.AssociatedDiagnoses != null && csvRow.AssociatedDiagnoses.toLowerCase() !== 'null') ? csvRow.AssociatedDiagnoses : undefined,
-                numberOfCycles: csvRow.NumberOfCycles,
-                status: csvRow.Status,
+                displayName: this.parseNotNull(csvRow.DisplayName),
+                diagnoses: this.parseNotNull(csvRow.AssociatedDiagnoses),
+                numberOfCycles: this.parseNotNull(csvRow.NumberOfCycles),
+                status: this.parseNotNull(csvRow.Status),
             }
         }
 
