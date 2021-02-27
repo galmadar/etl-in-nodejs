@@ -6,7 +6,6 @@ import Hospital1Parser from "./parser/hospitalParsers/hospital1Parser";
 import Treatment from "./DB/models/Treatment";
 import Patient from "./DB/models/Patient";
 import Hospital2Parser from "./parser/hospitalParsers/hospital2Parser";
-import child_process from 'child_process';
 
 /* Init mongo, fileWatcher and CSVParser "managers" */
 const mongoConnection = new MongoConnection('mongodb://localhost:27017/etl');
