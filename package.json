@@ -1,0 +1,31 @@
+{
+  "name": "etl-in-nodejs",
+  "version": "1.0.0",
+  "description": "## Flow ### \"Watch\" files - Files goes into the files folder OR http request is sent to the server - event/function is published to the next step (read the file) ### Parsing the files - \"General\" reader, reads the new csv - Pass it to the relevant reader (? - we might not need this step because we \"always\" save specific data) - **Parse corrupted files** ### Save A LOT OF DATA in the DB - **Should be scalable** - **Data deduplication**",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "start": "npm run build && node dist",
+    "restart": "rimraf dist && npm run start",
+    "dev": "nodemon --exec npm run restart"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.1",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-transform-async-to-generator": "^7.13.0",
+    "@babel/preset-env": "^7.13.5",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "chokidar": "^3.5.1",
+    "csv-parser": "^3.0.0",
+    "filewatcher": "^3.0.1",
+    "fs": "^0.0.1-security",
+    "moment": "^2.29.1",
+    "mongoose": "^5.11.18",
+    "winston": "^3.3.3"
+  }
+}
