@@ -17,7 +17,7 @@ const logger = createLogger({
         format.timestamp()
     ),
     transports: logTransports,
-    defaultMeta: {service: 'api'}
+    defaultMeta: {service: 'api', thread: process.pid}
 });
 
 export default logger;

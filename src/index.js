@@ -4,7 +4,7 @@ import child_process from "child_process";
 
 const handleNewFile = (howManyHandlersToRun) => {
     for (let i = 0; i < howManyHandlersToRun; i++) {
-        child_process.fork(`${__dirname}/handleNewFile.js`, [`${i}`])
+        child_process.fork(`${__dirname}/handleNewFile.js`, [`handler-${i}`])
     }
 }
 

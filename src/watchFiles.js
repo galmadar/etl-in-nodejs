@@ -5,12 +5,15 @@ import logger from "./logger/logger";
 const fileWatcher = new FileWatcher()
 let dirPath = `${__dirname}/csvs`;
 
+logger.info(`Watching files in dir:: ${dirPath}`)
+
 const fileChanged = (file) => {
+    logger.info(`FileChanged: ${file}`)
     fileChangedQueue
         .createJob({file})
         .save()
         .then((job) => {
-            logger.info(`enqueue file: ${file}`)
+            logger.info(`Enqueued file: ${file}`)
         })
 }
 
