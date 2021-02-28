@@ -16,4 +16,4 @@
 - MongoConnection and (Patient / Treatment) Models
 - Logger - logs messages in a file and in the console
 
-![Architecture Sketch](docs/draw.png)
+![Architecture Sketch](docs/architecture.png)
